@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Matching Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Word Matching Game</h1>
+        
+        <div class="game-area">
+            <div class="score-display">Score: <span id="score">0</span></div>
+            
+            <div class="game-status">
+                <div id="player-turn">Player 1's Turn</div>
+                <button id="pass-turn-btn">Pass Turn</button>
+                <button id="check-btn" style="display: none;">Check</button>
+            </div>
+            
+            <div class="nouns-container">
+                <!-- Nouns with adjective slots will be generated here -->
+            </div>
+            
+            <div class="adjectives-container">
+                <!-- Adjectives will be generated here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
