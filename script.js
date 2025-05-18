@@ -486,6 +486,11 @@ document.addEventListener('DOMContentLoaded', function() {
             adjectiveCard.addEventListener('dragstart', handleDragStart);
             adjectiveCard.addEventListener('dragend', handleDragEnd);
             
+            // Add touch events for mobile
+            adjectiveCard.addEventListener('touchstart', handleTouchStart, {passive: false});
+            adjectiveCard.addEventListener('touchmove', handleTouchMove, {passive: false});
+            adjectiveCard.addEventListener('touchend', handleTouchEnd, {passive: false});
+            
             // Keep click functionality for returning cards to the bottom
             adjectiveCard.addEventListener('click', handleAdjectiveClick);
             
@@ -545,6 +550,10 @@ document.addEventListener('DOMContentLoaded', function() {
             leftSlot.addEventListener('dragleave', handleDragLeave);
             leftSlot.addEventListener('drop', handleDrop);
             
+            // Add touch event listeners for mobile
+            leftSlot.addEventListener('touchstart', handleSlotTouchStart, {passive: true});
+            leftSlot.addEventListener('touchend', handleSlotTouchEnd, {passive: false});
+            
             // Keep click functionality for backward compatibility
             leftSlot.addEventListener('click', handleSlotClick);
             
@@ -564,6 +573,10 @@ document.addEventListener('DOMContentLoaded', function() {
             rightSlot.addEventListener('dragenter', handleDragEnter);
             rightSlot.addEventListener('dragleave', handleDragLeave);
             rightSlot.addEventListener('drop', handleDrop);
+            
+            // Add touch event listeners for mobile
+            rightSlot.addEventListener('touchstart', handleSlotTouchStart, {passive: true});
+            rightSlot.addEventListener('touchend', handleSlotTouchEnd, {passive: false});
             
             // Keep click functionality for backward compatibility
             rightSlot.addEventListener('click', handleSlotClick);
@@ -621,6 +634,185 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedAdjective.classList.remove('dragging');
         selectedAdjective.classList.add('assigned-adjective');
         selectedAdjective = null;
+    }
+    
+    // Touch event handlers for mobile devices
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchedAdjective = null;
+    let touchedSlot = null;
+    let clonedElement = null;
+    let isDragging = false;
+    
+    function handleTouchStart(event) {
+        event.preventDefault();
+        
+        // If the adjective is already in a slot, handle it like a click
+        if (event.target.parentElement.classList.contains('empty-slot')) {
+            handleAdjectiveClick(event);
+            return;
+        }
+        
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        touchedAdjective = event.target;
+        
+        // Create a visual clone for dragging
+        clonedElement = touchedAdjective.cloneNode(true);
+        clonedElement.classList.add('dragging-clone');
+        clonedElement.style.position = 'fixed';
+        clonedElement.style.left = (touchStartX - touchedAdjective.offsetWidth / 2) + 'px';
+        clonedElement.style.top = (touchStartY - touchedAdjective.offsetHeight / 2) + 'px';
+        clonedElement.style.zIndex = '1000';
+        clonedElement.style.opacity = '0.8';
+        clonedElement.style.pointerEvents = 'none';
+        document.body.appendChild(clonedElement);
+        
+        // Set the original element as selected
+        selectedAdjective = touchedAdjective;
+        touchedAdjective.classList.add('selected');
+    }
+    
+    function handleTouchMove(event) {
+        if (!clonedElement) return;
+        event.preventDefault();
+        
+        isDragging = true;
+        
+        const touchX = event.touches[0].clientX;
+        const touchY = event.touches[0].clientY;
+        
+        // Move the clone
+        clonedElement.style.left = (touchX - touchedAdjective.offsetWidth / 2) + 'px';
+        clonedElement.style.top = (touchY - touchedAdjective.offsetHeight / 2) + 'px';
+        
+        // Find if we're over a slot
+        const elementsUnderTouch = document.elementsFromPoint(touchX, touchY);
+        let foundSlot = null;
+        
+        for (const element of elementsUnderTouch) {
+            if (element.classList.contains('empty-slot')) {
+                foundSlot = element;
+                break;
+            }
+        }
+        
+        // Remove highlight from previous slot
+        if (touchedSlot && touchedSlot !== foundSlot) {
+            touchedSlot.classList.remove('drag-over');
+        }
+        
+        // Highlight new slot if valid
+        if (foundSlot) {
+            // Check if the slot is on the correct side and is empty
+            const side = foundSlot.dataset.side;
+            const isValidSide = (currentPlayer === 1 && side === 'right') ||
+                               (currentPlayer === 2 && side === 'left');
+            const isEmpty = foundSlot.children.length === 0;
+            
+            if (isValidSide && isEmpty) {
+                foundSlot.classList.add('drag-over');
+                touchedSlot = foundSlot;
+            }
+        }
+    }
+    
+    function handleTouchEnd(event) {
+        if (!clonedElement) return;
+        event.preventDefault();
+        
+        // Remove the clone
+        if (clonedElement.parentNode) {
+            clonedElement.parentNode.removeChild(clonedElement);
+        }
+        clonedElement = null;
+        
+        // If we're over a valid slot, drop the adjective there
+        if (touchedSlot) {
+            touchedSlot.classList.remove('drag-over');
+            
+            // Check if the slot is on the correct side for the current player
+            const side = touchedSlot.dataset.side;
+            if ((currentPlayer === 1 && side === 'right') ||
+                (currentPlayer === 2 && side === 'left')) {
+                
+                // Only allow drops on empty slots
+                if (touchedSlot.children.length === 0) {
+                    const nounIndex = touchedSlot.dataset.nounIndex;
+                    const adjectiveIndex = touchedAdjective.dataset.index;
+                    
+                    // Store the assignment
+                    if (currentPlayer === 1) {
+                        player1Assignments[nounIndex] = adjectiveIndex;
+                    } else {
+                        player2Assignments[nounIndex] = adjectiveIndex;
+                    }
+                    
+                    // Move the adjective card to the slot
+                    touchedSlot.appendChild(touchedAdjective);
+                    touchedAdjective.classList.remove('selected');
+                    touchedAdjective.classList.add('assigned-adjective');
+                }
+            }
+        }
+        
+        // If we didn't drag, treat it as a click for selection
+        if (!isDragging && !touchedAdjective.parentElement.classList.contains('empty-slot')) {
+            // Clear previous selection
+            document.querySelectorAll('.adjective-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Select the clicked adjective
+            touchedAdjective.classList.add('selected');
+            selectedAdjective = touchedAdjective;
+        }
+        
+        // Reset touch variables
+        touchedAdjective = null;
+        touchedSlot = null;
+        isDragging = false;
+    }
+    
+    function handleSlotTouchStart(event) {
+        // Store the slot for potential drop
+        touchedSlot = event.target;
+    }
+    
+    function handleSlotTouchEnd(event) {
+        event.preventDefault();
+        
+        // If no adjective is selected or the slot already has a child, do nothing
+        if (!selectedAdjective || event.target.children.length > 0) {
+            touchedSlot = null;
+            return;
+        }
+        
+        // Check if the slot is on the correct side for the current player
+        const side = event.target.dataset.side;
+        if ((currentPlayer === 1 && side !== 'right') ||
+            (currentPlayer === 2 && side !== 'left')) {
+            touchedSlot = null;
+            return;
+        }
+        
+        // Assign the adjective to the slot
+        const nounIndex = event.target.dataset.nounIndex;
+        const adjectiveIndex = selectedAdjective.dataset.index;
+        
+        // Store the assignment
+        if (currentPlayer === 1) {
+            player1Assignments[nounIndex] = adjectiveIndex;
+        } else {
+            player2Assignments[nounIndex] = adjectiveIndex;
+        }
+        
+        // Move the adjective card to the slot
+        event.target.appendChild(selectedAdjective);
+        selectedAdjective.classList.remove('selected');
+        selectedAdjective.classList.add('assigned-adjective');
+        selectedAdjective = null;
+        touchedSlot = null;
     }
     
     function handleSlotClick(event) {
