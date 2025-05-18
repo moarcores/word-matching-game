@@ -100,7 +100,17 @@ button:hover {
 .adjective-card {
     background-color: #f3e5f5;
     color: #7b1fa2;
-    cursor: pointer;
+    cursor: grab;
+}
+
+.adjective-card:active {
+    cursor: grabbing;
+}
+
+.adjective-card.dragging {
+    opacity: 0.6;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .adjective-card.selected {
@@ -128,6 +138,12 @@ button:hover {
 .empty-slot:hover {
     border-color: #999;
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.empty-slot.drag-over {
+    border-color: #7b1fa2;
+    background-color: rgba(123, 31, 162, 0.1);
+    border-style: solid;
 }
 
 .adjectives-container {

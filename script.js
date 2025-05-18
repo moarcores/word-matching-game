@@ -261,12 +261,175 @@ document.addEventListener('DOMContentLoaded', function() {
         'парковка',
         'гараж'
     ];
-    
+
     const adjectives = [
-        'Happy', 'Sad', 'Big', 'Small', 'Fast', 'Slow', 'Beautiful', 'Ugly', 
-        'Bright', 'Dark', 'Hot', 'Cold', 'New', 'Old', 'Loud', 'Quiet', 
-        'Soft', 'Hard', 'Sweet', 'Sour'
-    ];
+        'большой',
+        'маленький',
+        'новый',
+        'старый',
+        'хороший',
+        'плохой',
+        'красивый',
+        'уродливый',
+        'умный',
+        'глупый',
+        'смелый',
+        'трусливый',
+        'сильный',
+        'слабый',
+        'быстрый',
+        'медленный',
+        'высокий',
+        'низкий',
+        'широкий',
+        'узкий',
+        'длинный',
+        'короткий',
+        'тяжёлый',
+        'лёгкий',
+        'горячий',
+        'холодный',
+        'чистый',
+        'грязный',
+        'яркий',
+        'тусклый',
+        'светлый',
+        'тёмный',
+        'мягкий',
+        'твёрдый',
+        'жидкий',
+        'газообразный',
+        'сладкий',
+        'горький',
+        'кислый',
+        'солёный',
+        'приятный',
+        'неприятный',
+        'интересный',
+        'скучный',
+        'важный',
+        'неважный',
+        'полезный',
+        'бесполезный',
+        'удобный',
+        'неудобный',
+        'возможный',
+        'невозможный',
+        'реальный',
+        'нереальный',
+        'настоящий',
+        'ненастоящий',
+        'главный',
+        'второстепенный',
+        'общий',
+        'частный',
+        'простой',
+        'сложный',
+        'точный',
+        'неточный',
+        'полный',
+        'неполный',
+        'правильный',
+        'неправильный',
+        'безопасный',
+        'опасный',
+        'спокойный',
+        'нервный',
+        'активный',
+        'пассивный',
+        'открытый',
+        'закрытый',
+        'честный',
+        'лживый',
+        'добрый',
+        'злой',
+        'вежливый',
+        'грубый',
+        'внимательный',
+        'невнимательный',
+        'терпеливый',
+        'нетерпеливый',
+        'скромный',
+        'наглый',
+        'уверенный',
+        'неуверенный',
+        'оптимистичный',
+        'пессимистичный',
+        'энергичный',
+        'апатичный',
+        'независимый',
+        'зависимый',
+        'творческий',
+        'нетворческий',
+        'оригинальный',
+        'неоригинальный',
+        'модный',
+        'немодный',
+        'популярный',
+        'непопулярный',
+        'известный',
+        'неизвестный',
+        'уникальный',
+        'обычный',
+        'эксклюзивный',
+        'стандартный',
+        'роскошный',
+        'бюджетный',
+        'функциональный',
+        'нефункциональный',
+        'надёжный',
+        'ненадёжный',
+        'качественный',
+        'некачественный',
+        'эффективный',
+        'неэффективный',
+        'экологичный',
+        'некологичный',
+        'компактный',
+        'громоздкий',
+        'мобильный',
+        'стационарный',
+        'автоматический',
+        'ручной',
+        'электрический',
+        'механический',
+        'цифровой',
+        'аналоговый',
+        'современный',
+        'устаревший',
+        'традиционный',
+        'инновационный',
+        'практичный',
+        'непрактичный',
+        'универсальный',
+        'специализированный',
+        'гибкий',
+        'жёсткий',
+        'динамичный',
+        'статичный',
+        'конструктивный',
+        'деструктивный',
+        'позитивный',
+        'негативный',
+        'вдохновляющий',
+        'угнетающий',
+        'мотивирующий',
+        'демотивирующий',
+        'увлекательный',
+        'скучный',
+        'захватывающий',
+        'монотонный',
+        'радостный',
+        'грустный',
+        'весёлый',
+        'печальный',
+        'счастливый',
+        'несчастливый',
+        'гордый',
+        'смиренный',
+        'самостоятельный',
+        'зависимый',
+        'целеустремлённый']
     
     // Initialize the game
     initGame();
@@ -308,38 +471,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return shuffled.slice(0, count);
     }
     
-    function displayNouns() {
-        currentNouns.forEach((noun, index) => {
-            const nounRow = document.createElement('div');
-            nounRow.className = 'noun-row';
-            nounRow.dataset.index = index;
-            
-            // Left empty slot
-            const leftSlot = document.createElement('div');
-            leftSlot.className = 'empty-slot left-slot';
-            leftSlot.dataset.side = 'left';
-            leftSlot.dataset.nounIndex = index;
-            leftSlot.addEventListener('click', handleSlotClick);
-            
-            // Noun card
-            const nounCard = document.createElement('div');
-            nounCard.className = 'card noun-card';
-            nounCard.textContent = noun;
-            
-            // Right empty slot
-            const rightSlot = document.createElement('div');
-            rightSlot.className = 'empty-slot right-slot';
-            rightSlot.dataset.side = 'right';
-            rightSlot.dataset.nounIndex = index;
-            rightSlot.addEventListener('click', handleSlotClick);
-            
-            nounRow.appendChild(leftSlot);
-            nounRow.appendChild(nounCard);
-            nounRow.appendChild(rightSlot);
-            
-            nounsContainer.appendChild(nounRow);
-        });
-    }
     
     function displayAdjectives() {
         adjectivesContainer.innerHTML = '';
@@ -349,6 +480,13 @@ document.addEventListener('DOMContentLoaded', function() {
             adjectiveCard.className = 'card adjective-card';
             adjectiveCard.textContent = adjective;
             adjectiveCard.dataset.index = index;
+            
+            // Make adjective cards draggable
+            adjectiveCard.setAttribute('draggable', 'true');
+            adjectiveCard.addEventListener('dragstart', handleDragStart);
+            adjectiveCard.addEventListener('dragend', handleDragEnd);
+            
+            // Keep click functionality for returning cards to the bottom
             adjectiveCard.addEventListener('click', handleAdjectiveClick);
             
             adjectivesContainer.appendChild(adjectiveCard);
@@ -356,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function handleAdjectiveClick(event) {
-        // If the adjective is already assigned, return it to the bottom
+        // Only handle clicks for returning adjectives to the bottom
         if (event.target.parentElement.classList.contains('empty-slot')) {
             const adjectiveCard = event.target;
             const adjectiveIndex = adjectiveCard.dataset.index;
@@ -371,18 +509,118 @@ document.addEventListener('DOMContentLoaded', function() {
             // Move back to adjectives container
             adjectivesContainer.appendChild(adjectiveCard);
             adjectiveCard.classList.remove('assigned-adjective');
+        }
+    }
+    
+    // Drag and Drop functionality
+    function handleDragStart(event) {
+        // Store the dragged element
+        selectedAdjective = event.target;
+        event.target.classList.add('dragging');
+        
+        // Set data transfer
+        event.dataTransfer.setData('text/plain', event.target.dataset.index);
+        event.dataTransfer.effectAllowed = 'move';
+    }
+    
+    function handleDragEnd(event) {
+        event.target.classList.remove('dragging');
+    }
+    
+    function displayNouns() {
+        currentNouns.forEach((noun, index) => {
+            const nounRow = document.createElement('div');
+            nounRow.className = 'noun-row';
+            nounRow.dataset.index = index;
             
+            // Left empty slot
+            const leftSlot = document.createElement('div');
+            leftSlot.className = 'empty-slot left-slot';
+            leftSlot.dataset.side = 'left';
+            leftSlot.dataset.nounIndex = index;
+            
+            // Add drag and drop event listeners
+            leftSlot.addEventListener('dragover', handleDragOver);
+            leftSlot.addEventListener('dragenter', handleDragEnter);
+            leftSlot.addEventListener('dragleave', handleDragLeave);
+            leftSlot.addEventListener('drop', handleDrop);
+            
+            // Keep click functionality for backward compatibility
+            leftSlot.addEventListener('click', handleSlotClick);
+            
+            // Noun card
+            const nounCard = document.createElement('div');
+            nounCard.className = 'card noun-card';
+            nounCard.textContent = noun;
+            
+            // Right empty slot
+            const rightSlot = document.createElement('div');
+            rightSlot.className = 'empty-slot right-slot';
+            rightSlot.dataset.side = 'right';
+            rightSlot.dataset.nounIndex = index;
+            
+            // Add drag and drop event listeners
+            rightSlot.addEventListener('dragover', handleDragOver);
+            rightSlot.addEventListener('dragenter', handleDragEnter);
+            rightSlot.addEventListener('dragleave', handleDragLeave);
+            rightSlot.addEventListener('drop', handleDrop);
+            
+            // Keep click functionality for backward compatibility
+            rightSlot.addEventListener('click', handleSlotClick);
+            
+            nounRow.appendChild(leftSlot);
+            nounRow.appendChild(nounCard);
+            nounRow.appendChild(rightSlot);
+            
+            nounsContainer.appendChild(nounRow);
+        });
+    }
+    
+    function handleDragOver(event) {
+        // Prevent default to allow drop
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+    }
+    
+    function handleDragEnter(event) {
+        event.preventDefault();
+        event.target.classList.add('drag-over');
+    }
+    
+    function handleDragLeave(event) {
+        event.target.classList.remove('drag-over');
+    }
+    
+    function handleDrop(event) {
+        event.preventDefault();
+        event.target.classList.remove('drag-over');
+        
+        // Only allow drops on empty slots
+        if (event.target.children.length > 0) return;
+        
+        // Check if the slot is on the correct side for the current player
+        const side = event.target.dataset.side;
+        if ((currentPlayer === 1 && side !== 'right') ||
+            (currentPlayer === 2 && side !== 'left')) {
             return;
         }
         
-        // Clear previous selection
-        document.querySelectorAll('.adjective-card').forEach(card => {
-            card.classList.remove('selected');
-        });
+        // Get the adjective index from the data transfer
+        const adjectiveIndex = event.dataTransfer.getData('text/plain');
+        const nounIndex = event.target.dataset.nounIndex;
         
-        // Select the clicked adjective
-        event.target.classList.add('selected');
-        selectedAdjective = event.target;
+        // Store the assignment
+        if (currentPlayer === 1) {
+            player1Assignments[nounIndex] = adjectiveIndex;
+        } else {
+            player2Assignments[nounIndex] = adjectiveIndex;
+        }
+        
+        // Move the adjective card to the slot
+        event.target.appendChild(selectedAdjective);
+        selectedAdjective.classList.remove('dragging');
+        selectedAdjective.classList.add('assigned-adjective');
+        selectedAdjective = null;
     }
     
     function handleSlotClick(event) {
@@ -394,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Check if the slot is on the correct side for the current player
         const side = event.target.dataset.side;
-        if ((currentPlayer === 1 && side !== 'right') || 
+        if ((currentPlayer === 1 && side !== 'right') ||
             (currentPlayer === 2 && side !== 'left')) {
             return;
         }
